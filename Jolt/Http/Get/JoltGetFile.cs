@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,6 +13,7 @@ namespace JoltHttp.Http.Get
     {
         private string url;
         private string filepath;
+        private List<KeyValuePair<string, string>> Cookies = new List<KeyValuePair<string, string>>();
 
         private Action OnSuccess;
         public Action<string> OnFail;
@@ -20,6 +22,12 @@ namespace JoltHttp.Http.Get
         public JoltGetFile(string url)
         {
             this.url = url;
+        }
+
+        public JoltGetFile SetCookies(string CookieName, string CookieValue)
+        {
+            Cookies.Add(new KeyValuePair<string, string>(CookieName, CookieValue));
+            return this;
         }
 
         public JoltGetFile SaveTo(string filepath)
@@ -37,20 +45,21 @@ namespace JoltHttp.Http.Get
             this.OnProgress = OnProgress;
             this.OnFail = OnFail;
 
-            //using (var httpClient = new HttpClient())
-            //{ 
-            //    using (var request = new HttpRequestMessage(HttpMethod.Get, url))
-            //    {                 
-            //        using (Stream contentStream = await(await httpClient.SendAsync(request)).Content.ReadAsStreamAsync(),
-            //               stream = new FileStream(filepath, FileMode.Create, FileAccess.Write, FileShare.None, 4096, true))
-            //        {
-            //            await contentStream.CopyToAsync(stream);
-            //        }
-            //    }
-            //}
-
             using (var client = new WebClient())
             {
+                if (Cookies.Count != 0)
+                {
+                    string cookies = "";
+
+                    foreach (var element in Cookies)
+                    {
+                        cookies += element.Key + "=" + element.Value + "; ";                       
+                    }
+
+                    cookies = cookies.Remove(cookies.Length - 2);
+                    client.Headers.Add(HttpRequestHeader.Cookie, cookies);
+                }
+
                 // Call OnStart() at the beginning
                 OnStart();
 

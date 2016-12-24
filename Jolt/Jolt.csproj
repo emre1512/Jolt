@@ -43,16 +43,27 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Jolt.cs" />
+    <Compile Include="Controller\Jolt.cs" />
+    <Compile Include="Http\Delete\JoltDeleteRequest.cs" />
+    <Compile Include="Http\Get\JoltGetFile.cs" />
+    <Compile Include="Http\Get\JoltGetJSON.cs" />
+    <Compile Include="Http\Get\JoltGetRequest.cs" />
+    <Compile Include="Http\Get\JoltGetText.cs" />
+    <Compile Include="Http\Head\JoltHeadRequest.cs" />
+    <Compile Include="Http\Post\JoltPostForm.cs" />
+    <Compile Include="Http\Post\JoltPostJSON.cs" />
+    <Compile Include="Http\Post\JoltPostMultipart.cs" />
+    <Compile Include="Http\Post\JoltPostRequest.cs" />
+    <Compile Include="Http\Post\JoltPostText.cs" />
+    <Compile Include="Http\Put\JoltPutFile.cs" />
+    <Compile Include="Http\Put\JoltPutRequest.cs" />
+    <Compile Include="Utils\JSONConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Http\" />
-    <Folder Include="Utils\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

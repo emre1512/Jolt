@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,6 +14,7 @@ namespace JoltHttp.Http.Post
 
         private string url;
         private MultipartFormDataContent MultipartContent = new MultipartFormDataContent();
+        private CookieContainer cookieContainer = new CookieContainer();
 
         public JoltPostMultipart(string url)
         {
@@ -22,6 +24,12 @@ namespace JoltHttp.Http.Post
         public JoltPostMultipart AddField(string content, string name)
         {
             MultipartContent.Add(new StringContent(content), name);
+            return this;
+        }
+
+        public JoltPostMultipart SetCookies(string CookieName, string CookieValue)
+        {
+            cookieContainer.Add(new Cookie(CookieName, CookieValue));
             return this;
         }
 
@@ -45,7 +53,16 @@ namespace JoltHttp.Http.Post
         public async void MakeRequest(Action<string> OnSuccess, Action<string> OnFail = null,
                                       Action OnStart = null, Action OnFinish = null)
         {
-            using (var client = new HttpClient())
+
+            var handler = new HttpClientHandler();
+
+            if (cookieContainer.Count != 0)
+            {
+                handler.UseCookies = false;
+                handler.CookieContainer = cookieContainer;
+            }
+
+            using (var client = new HttpClient(handler))
             {
                 // Call OnStart() at the beginning
                 if (OnStart != null)

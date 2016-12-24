@@ -13,6 +13,7 @@ namespace JoltHttp.Http.Put
         private string url;
         private string filePath;
         byte[] file;
+        private List<KeyValuePair<string, string>> Cookies = new List<KeyValuePair<string, string>>();
 
         private Action OnSuccess;
         private Action<string> OnFail;
@@ -30,6 +31,11 @@ namespace JoltHttp.Http.Put
             this.url = url;
         }
 
+        public JoltPutFile SetCookies(string CookieName, string CookieValue)
+        {
+            Cookies.Add(new KeyValuePair<string, string>(CookieName, CookieValue));
+            return this;
+        }
 
         public void MakeRequest(Action OnSuccess, Action<string> OnFail = null,
                                 Action OnStart = null, Action OnFinish = null,
@@ -55,6 +61,19 @@ namespace JoltHttp.Http.Put
 
             using (var client = new WebClient())
             {
+
+                if (Cookies.Count != 0)
+                {
+                    string cookies = "";
+
+                    foreach (var element in Cookies)
+                    {
+                        cookies += element.Key + "=" + element.Value + "; ";
+                    }
+
+                    cookies = cookies.Remove(cookies.Length - 2);
+                    client.Headers.Add(HttpRequestHeader.Cookie, cookies);
+                }
 
                 // Call OnStart() at the beginning
                 if (OnStart != null)

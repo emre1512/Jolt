@@ -1,5 +1,6 @@
-﻿using Jolt.Utils;
+﻿using JoltHttp.Utils;
 using System;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 
@@ -9,6 +10,7 @@ namespace JoltHttp.Http.Post
     {
         private string url;
         private string json;
+        private CookieContainer cookieContainer = new CookieContainer();
 
         public JoltPostJSON(string url, string json)
         {
@@ -16,11 +18,25 @@ namespace JoltHttp.Http.Post
             this.json = json;
         }
 
+        public JoltPostJSON SetCookies(string CookieName, string CookieValue)
+        {        
+            cookieContainer.Add(new Cookie(CookieName, CookieValue));
+            return this;
+        }
+
         public async void MakeRequest(Action<object> OnSuccess, Action<string> OnFail = null,
                                       Action OnStart = null, Action OnFinish = null)
         {
+            
+            var handler = new HttpClientHandler();
 
-            using (var client = new HttpClient())
+            if (cookieContainer.Count != 0)
+            {
+                handler.UseCookies = false;
+                handler.CookieContainer = cookieContainer;
+            }        
+
+            using (var client = new HttpClient(handler))
             {
 
                 // Call OnStart() at the beginning
