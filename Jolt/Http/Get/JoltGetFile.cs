@@ -14,6 +14,8 @@ namespace JoltHttp.Http.Get
         private string url;
         private string filepath;
         private List<KeyValuePair<string, string>> Cookies = new List<KeyValuePair<string, string>>();
+        private string oAuthKey;
+        private string oAuthValue;
 
         private Action OnSuccess;
         public Action<string> OnFail;
@@ -27,6 +29,13 @@ namespace JoltHttp.Http.Get
         public JoltGetFile SetCookies(string CookieName, string CookieValue)
         {
             Cookies.Add(new KeyValuePair<string, string>(CookieName, CookieValue));
+            return this;
+        }
+
+        public JoltGetFile SetCredentials(string key, string value)
+        {
+            oAuthKey = key;
+            oAuthValue = value;
             return this;
         }
 
@@ -47,6 +56,12 @@ namespace JoltHttp.Http.Get
 
             using (var client = new WebClient())
             {
+
+                if (oAuthKey != null && oAuthValue != null)
+                {
+                    client.Credentials = new NetworkCredential(oAuthKey, oAuthValue);
+                }
+
                 if (Cookies.Count != 0)
                 {
                     string cookies = "";

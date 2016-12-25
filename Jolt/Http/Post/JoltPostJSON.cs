@@ -11,6 +11,8 @@ namespace JoltHttp.Http.Post
         private string url;
         private string json;
         private CookieContainer cookieContainer = new CookieContainer();
+        private string oAuthKey;
+        private string oAuthValue;
 
         public JoltPostJSON(string url, string json)
         {
@@ -24,6 +26,13 @@ namespace JoltHttp.Http.Post
             return this;
         }
 
+        public JoltPostJSON SetCredentials(string key, string value)
+        {
+            oAuthKey = key;
+            oAuthValue = value;
+            return this;
+        }
+
         public async void MakeRequest(Action<object> OnSuccess, Action<string> OnFail = null,
                                       Action OnStart = null, Action OnFinish = null)
         {
@@ -34,10 +43,16 @@ namespace JoltHttp.Http.Post
             {
                 handler.UseCookies = false;
                 handler.CookieContainer = cookieContainer;
-            }        
+            }
 
             using (var client = new HttpClient(handler))
             {
+
+                if (oAuthKey != null && oAuthValue != null)
+                {
+                    client.DefaultRequestHeaders.Authorization = 
+                                new AuthenticationHeaderValue(oAuthKey, oAuthValue);
+                }
 
                 // Call OnStart() at the beginning
                 if (OnStart != null)

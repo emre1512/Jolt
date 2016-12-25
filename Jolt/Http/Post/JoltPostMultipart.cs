@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,6 +16,8 @@ namespace JoltHttp.Http.Post
         private string url;
         private MultipartFormDataContent MultipartContent = new MultipartFormDataContent();
         private CookieContainer cookieContainer = new CookieContainer();
+        private string oAuthKey;
+        private string oAuthValue;
 
         public JoltPostMultipart(string url)
         {
@@ -30,6 +33,13 @@ namespace JoltHttp.Http.Post
         public JoltPostMultipart SetCookies(string CookieName, string CookieValue)
         {
             cookieContainer.Add(new Cookie(CookieName, CookieValue));
+            return this;
+        }
+
+        public JoltPostMultipart SetCredentials(string key, string value)
+        {
+            oAuthKey = key;
+            oAuthValue = value;
             return this;
         }
 
@@ -64,6 +74,13 @@ namespace JoltHttp.Http.Post
 
             using (var client = new HttpClient(handler))
             {
+
+                if (oAuthKey != null && oAuthValue != null)
+                {
+                    client.DefaultRequestHeaders.Authorization =
+                                new AuthenticationHeaderValue(oAuthKey, oAuthValue);
+                }
+
                 // Call OnStart() at the beginning
                 if (OnStart != null)
                     OnStart();

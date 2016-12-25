@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -14,6 +15,8 @@ namespace JoltHttp.Http.Post
         private string url;
         private string text;
         private CookieContainer cookieContainer = new CookieContainer();
+        private string oAuthKey;
+        private string oAuthValue;
 
         public JoltPostText(string url, string text)
         {
@@ -24,6 +27,13 @@ namespace JoltHttp.Http.Post
         public JoltPostText SetCookies(string CookieName, string CookieValue)
         {
             cookieContainer.Add(new Cookie(CookieName, CookieValue));
+            return this;
+        }
+
+        public JoltPostText SetCredentials(string key, string value)
+        {
+            oAuthKey = key;
+            oAuthValue = value;
             return this;
         }
 
@@ -41,6 +51,12 @@ namespace JoltHttp.Http.Post
 
             using (var client = new HttpClient(handler))
             {
+
+                if (oAuthKey != null && oAuthValue != null)
+                {
+                    client.DefaultRequestHeaders.Authorization =
+                                new AuthenticationHeaderValue(oAuthKey, oAuthValue);
+                }
 
                 // Call OnStart() at the beginning
                 if (OnStart != null)
