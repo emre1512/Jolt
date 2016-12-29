@@ -12,6 +12,7 @@ namespace JoltHttp.Http.Get
         private CookieContainer cookieContainer = new CookieContainer();
         private string oAuthKey;
         private string oAuthValue;
+        private int timeOut;
 
         public JoltGetJSON(string url)
         {
@@ -31,8 +32,14 @@ namespace JoltHttp.Http.Get
             return this;
         }
 
+        public JoltGetJSON SetTimeOut(int TimeOut)
+        {
+            timeOut = TimeOut;
+            return this;
+        }
+
         public async void MakeRequest(Action<object> OnSuccess, Action<string> OnFail = null,
-                                      Action OnStart = null, Action OnFinish = null)
+                                      Action OnStart = null)
         {
 
             var handler = new HttpClientHandler();
@@ -45,6 +52,11 @@ namespace JoltHttp.Http.Get
 
             using (var client = new HttpClient(handler))
             {
+
+                if (timeOut != 0)
+                {
+                    client.Timeout = new TimeSpan(0, 0, 0, timeOut);
+                }
 
                 if (oAuthKey != null && oAuthValue != null)
                 {
@@ -64,12 +76,13 @@ namespace JoltHttp.Http.Get
                 }
                 catch (Exception e)
                 {
-                    OnFail(e.ToString());
+                    if (OnFail != null)
+                        OnFail(e.ToString());
                 }
 
                 // Call OnFinish() at the end
-                if (OnFinish != null)
-                    OnFinish();
+                //if (OnFinish != null)
+                //    OnFinish();
 
             }
 

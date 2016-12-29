@@ -18,6 +18,7 @@ namespace JoltHttp.Http.Post
         private CookieContainer cookieContainer = new CookieContainer();
         private string oAuthKey;
         private string oAuthValue;
+        private int timeOut;
 
         public JoltPostMultipart(string url)
         {
@@ -43,6 +44,12 @@ namespace JoltHttp.Http.Post
             return this;
         }
 
+        public JoltPostMultipart SetTimeOut(int TimeOut)
+        {
+            timeOut = TimeOut;
+            return this;
+        }
+
         // Here, we are reading a file from its path all at once.
         // Reading a large file all at once can cause memory problems.
         public JoltPostMultipart AddFile(string filePath, string name, string fileName)
@@ -61,7 +68,7 @@ namespace JoltHttp.Http.Post
         }
 
         public async void MakeRequest(Action<string> OnSuccess, Action<string> OnFail = null,
-                                      Action OnStart = null, Action OnFinish = null)
+                                      Action OnStart = null)
         {
 
             var handler = new HttpClientHandler();
@@ -75,6 +82,11 @@ namespace JoltHttp.Http.Post
             using (var client = new HttpClient(handler))
             {
 
+                if (timeOut != 0)
+                {
+                    client.Timeout = new TimeSpan(0, 0, 0, timeOut);
+                }
+
                 if (oAuthKey != null && oAuthValue != null)
                 {
                     client.DefaultRequestHeaders.Authorization =
@@ -87,8 +99,8 @@ namespace JoltHttp.Http.Post
 
                 try
                 {
-                    var response = await client.PostAsync(this.url, MultipartContent);
-
+                    var response = await client.PostAsync(url, MultipartContent);
+                    
                     if (response.IsSuccessStatusCode)
                     {
                         var result = await response.Content.ReadAsStringAsync();
@@ -96,17 +108,19 @@ namespace JoltHttp.Http.Post
                     }
                     else
                     {
-                        OnFail(response.StatusCode.ToString());
+                        if (OnFail != null)
+                            OnFail(response.StatusCode.ToString());
                     }
                 }
                 catch (Exception e)
                 {
-                    OnFail(e.ToString());
+                    if (OnFail != null)
+                        OnFail(e.ToString());
                 }
 
                 // Call OnFinish() at the beginning
-                if (OnFinish != null)
-                    OnFinish();
+                //if (OnFinish != null)
+                //    OnFinish();
 
             }
         }
