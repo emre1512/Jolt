@@ -1,4 +1,5 @@
-﻿using JoltHttp.Http.Delete;
+﻿using JoltHttp.Ftp;
+using JoltHttp.Http.Delete;
 using JoltHttp.Http.Get;
 using JoltHttp.Http.Head;
 using JoltHttp.Http.Post;
@@ -33,6 +34,21 @@ namespace JoltHttp
         public static JoltHeadRequest HEAD(string url)
         {
             return new JoltHeadRequest(url);
+        }
+
+        public static JoltFtpUpload Upload(string filePath, string url)
+        {
+            return new JoltFtpUpload(filePath, url);
+        }
+
+        public static JoltFtpUpload Upload(byte[] file, string url)
+        {
+            return new JoltFtpUpload(file, url);
+        }
+
+        public static JoltFtpDownload Download(string filePath, string url)
+        {
+            return new JoltFtpDownload(filePath, url);
         }
 
     }   

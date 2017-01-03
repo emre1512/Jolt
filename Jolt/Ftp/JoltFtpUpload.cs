@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace JoltHttp.Ftp
 {
-    class JoltFtpUpload
+    public class JoltFtpUpload
     {
 
         private string url;

@@ -9,34 +9,29 @@ using System.Threading.Tasks;
 
 namespace JoltHttp.Ftp
 {
-    class JoltFtpDownload
+    public class JoltFtpDownload
     {
 
         private string url;
         private string filepath;
-        private string oAuthKey;
-        private string oAuthValue;
+        private string username;
+        private string password;
         private int timeOut;
 
         private Action OnComplete;
         public Action<string> OnFail;
         private Action<long, long, long> OnProgress;
 
-        public JoltFtpDownload(string url)
+        public JoltFtpDownload(string filepath, string url)
         {
+            this.filepath = filepath;
             this.url = url;
         }
 
-        public JoltFtpDownload SetCredentials(string key, string value)
+        public JoltFtpDownload SetCredentials(string username, string password)
         {
-            oAuthKey = key;
-            oAuthValue = value;
-            return this;
-        }
-
-        public JoltFtpDownload SaveTo(string filepath)
-        {
-            this.filepath = filepath;
+            this.username = username;
+            this.password = password;
             return this;
         }
 
@@ -52,9 +47,9 @@ namespace JoltHttp.Ftp
             using (var client = new WebClient())
             {
 
-                if (oAuthKey != null && oAuthValue != null)
+                if (username != null && password != null)
                 {
-                    client.Credentials = new NetworkCredential(oAuthKey, oAuthValue);
+                    client.Credentials = new NetworkCredential(username, password);
                 }
 
                 // Call OnStart() at the beginning
