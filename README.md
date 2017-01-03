@@ -2,7 +2,7 @@
 
 ![https://msdn.microsoft.com/en-us/library/w0x726c2(v=vs.110).aspx](https://img.shields.io/badge/platform-C%23%2F.NET-brightgreen.svg?style=flat-square)
 ![https://www.apache.org/licenses/LICENSE-2.0](https://img.shields.io/badge/licence-Apache%20v2.0-blue.svg?style=flat-square)
-![https://github.com/emre1512/Jolt](https://img.shields.io/badge/version-0.3.2-ff69b4.svg?style=flat-square)
+![https://github.com/emre1512/Jolt](https://img.shields.io/badge/version-0.3.3-ff69b4.svg?style=flat-square)
 
 ## What Jolt can do?
 
@@ -10,24 +10,23 @@
 
 	* Asynchronously Download (via GET)
 		* Text/JSON
-		* Files (with optional progress callback)
+		* Files
 	* Asynchronously Upload (via POST/PUT)
 		* Text/JSON
 		* application/x-www-form-urlencoded
 		* multipart/form-data
-		* Files 
+		* Files
+
+- Asynchronously FTP Download/Upload
 
 - Authentication
 
 - Custom cookies
 
-- All requests/operations return optional callbacks (OnStart,OnFinish,OnSuccess,OnFail,OnProgress) 
+- Progress reports for upload/download
 
-## What will be added soon?
+- All requests/operations return optional callbacks (OnStart, OnComplete, OnFail, OnProgress) 
 
-- FTP upload/download support (with optional progress callback)
-- Possibly XML support
-- Some other little features
 
 ## Installation
 

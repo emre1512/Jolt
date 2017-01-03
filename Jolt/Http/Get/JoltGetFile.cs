@@ -200,7 +200,8 @@ namespace JoltHttp.Http.Get
 
         private void DownloadProgress(object sender, DownloadProgressChangedEventArgs e)
         {
-            OnProgress(e.BytesReceived, e.TotalBytesToReceive, e.ProgressPercentage);
+            if (OnProgress != null)
+                OnProgress(e.BytesReceived, e.TotalBytesToReceive, e.ProgressPercentage);
         }
 
         private void Completed(object sender, AsyncCompletedEventArgs e)
