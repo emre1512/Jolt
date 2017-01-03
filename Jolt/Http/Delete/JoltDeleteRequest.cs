@@ -41,7 +41,7 @@ namespace JoltHttp.Http.Delete
             return this;
         }
 
-        public async void MakeRequest(Action<string> OnSuccess, Action<string> OnFail = null,
+        public async void MakeRequest(Action<string> OnComplete, Action<string> OnFail = null,
                                       Action OnStart = null)
         {
 
@@ -77,7 +77,7 @@ namespace JoltHttp.Http.Delete
                     if (response.IsSuccessStatusCode)
                     {
                         var result = await response.Content.ReadAsStringAsync();
-                        OnSuccess(result.ToString());
+                        OnComplete(result.ToString());
                     }
                     else
                     {

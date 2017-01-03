@@ -34,13 +34,13 @@ namespace JoltHttp.Http.Post
             return this;
         }
 
-        public JoltPostJSON SetTimeOut(int TimeOut)
-        {
-            timeOut = TimeOut;
-            return this;
-        }
+        //public JoltPostJSON SetTimeOut(int TimeOut)
+        //{
+        //    timeOut = TimeOut;
+        //    return this;
+        //}
 
-        public async void MakeRequest(Action<object> OnSuccess, Action<string> OnFail = null,
+        public async void MakeRequest(Action<object> OnComplete, Action<string> OnFail = null,
                                       Action OnStart = null)
         {
             
@@ -83,7 +83,7 @@ namespace JoltHttp.Http.Post
                     {
                         var result = await response.Content.ReadAsStringAsync();
                         var jsonObject = JSONConverter.JSONToObject(result);
-                        OnSuccess(result);
+                        OnComplete(result);
                     }
                     else
                     {

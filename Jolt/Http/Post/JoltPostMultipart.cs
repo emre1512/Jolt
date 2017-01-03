@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -14,26 +15,34 @@ namespace JoltHttp.Http.Post
     {
 
         private string url;
-        private MultipartFormDataContent MultipartContent = new MultipartFormDataContent();
-        private CookieContainer cookieContainer = new CookieContainer();
+        //private MultipartFormDataContent MultipartContent = new MultipartFormDataContent();
+        private NameValueCollection FormFields = new NameValueCollection();
+        private byte[] fileToSend;
+        //private CookieContainer cookieContainer = new CookieContainer();
+        private List<KeyValuePair<string, string>> Cookies = new List<KeyValuePair<string, string>>();
         private string oAuthKey;
         private string oAuthValue;
         private int timeOut;
+
+        private Action<string> OnComplete;
+        private Action<string> OnFail;
+        private Action<long, long, long> OnProgress;
 
         public JoltPostMultipart(string url)
         {
             this.url = url;
         }
 
-        public JoltPostMultipart AddField(string content, string name)
+        public JoltPostMultipart AddField(string value, string name)
         {
-            MultipartContent.Add(new StringContent(content), name);
+            FormFields.Add(value, name);
+            //MultipartContent.Add(new StringContent(content), name);
             return this;
         }
 
         public JoltPostMultipart SetCookies(string CookieName, string CookieValue)
         {
-            cookieContainer.Add(new Cookie(CookieName, CookieValue));
+            Cookies.Add(new KeyValuePair<string, string>(CookieName, CookieValue));
             return this;
         }
 
@@ -44,18 +53,17 @@ namespace JoltHttp.Http.Post
             return this;
         }
 
-        public JoltPostMultipart SetTimeOut(int TimeOut)
-        {
-            timeOut = TimeOut;
-            return this;
-        }
+        //public JoltPostMultipart SetTimeOut(int TimeOut)
+        //{
+        //    timeOut = TimeOut;
+        //    return this;
+        //}
 
         // Here, we are reading a file from its path all at once.
         // Reading a large file all at once can cause memory problems.
         public JoltPostMultipart AddFile(string filePath, string name, string fileName)
         {
-            byte[] file = File.ReadAllBytes(filePath);
-            MultipartContent.Add(new StreamContent(new MemoryStream(file)), name, fileName);
+            fileToSend = File.ReadAllBytes(filePath);
             return this;
         }
 
@@ -63,34 +71,39 @@ namespace JoltHttp.Http.Post
         // Then send it as a byte array.
         public JoltPostMultipart AddFile(byte[] file, string name, string fileName)
         {
-            MultipartContent.Add(new StreamContent(new MemoryStream(file)), name, fileName);
+            fileToSend = file;
             return this;
         }
 
-        public async void MakeRequest(Action<string> OnSuccess, Action<string> OnFail = null,
-                                      Action OnStart = null)
+        public void MakeRequest(Action<string> OnComplete, Action<string> OnFail = null,
+                                      Action OnStart = null,
+                                      Action<long, long, long> OnProgress = null)
         {
+            this.OnComplete = OnComplete;
+            this.OnFail = OnFail;
+            this.OnProgress = OnProgress;
 
-            var handler = new HttpClientHandler();
-
-            if (cookieContainer.Count != 0)
-            {
-                handler.UseCookies = false;
-                handler.CookieContainer = cookieContainer;
-            }
-
-            using (var client = new HttpClient(handler))
+            using (var client = new WebClient())
             {
 
-                if (timeOut != 0)
-                {
-                    client.Timeout = new TimeSpan(0, 0, 0, timeOut);
-                }
+                if (FormFields != null) client.QueryString = FormFields;
 
                 if (oAuthKey != null && oAuthValue != null)
                 {
-                    client.DefaultRequestHeaders.Authorization =
-                                new AuthenticationHeaderValue(oAuthKey, oAuthValue);
+                    client.Credentials = new NetworkCredential(oAuthKey, oAuthValue);
+                }
+
+                if (Cookies.Count != 0)
+                {
+                    string cookies = "";
+
+                    foreach (var element in Cookies)
+                    {
+                        cookies += element.Key + "=" + element.Value + "; ";
+                    }
+
+                    cookies = cookies.Remove(cookies.Length - 2);
+                    client.Headers.Add(HttpRequestHeader.Cookie, cookies);
                 }
 
                 // Call OnStart() at the beginning
@@ -99,18 +112,9 @@ namespace JoltHttp.Http.Post
 
                 try
                 {
-                    var response = await client.PostAsync(url, MultipartContent);
-                    
-                    if (response.IsSuccessStatusCode)
-                    {
-                        var result = await response.Content.ReadAsStringAsync();
-                        OnSuccess(result.ToString());
-                    }
-                    else
-                    {
-                        if (OnFail != null)
-                            OnFail(response.StatusCode.ToString());
-                    }
+                    client.UploadDataAsync(new Uri(url), "POST", fileToSend);
+                    client.UploadDataCompleted += Completed;
+                    client.UploadProgressChanged += UploadProgress;
                 }
                 catch (Exception e)
                 {
@@ -118,10 +122,26 @@ namespace JoltHttp.Http.Post
                         OnFail(e.ToString());
                 }
 
-                // Call OnFinish() at the beginning
-                //if (OnFinish != null)
-                //    OnFinish();
+            }
 
+        }
+
+        private void UploadProgress(object sender, UploadProgressChangedEventArgs e)
+        {
+            if (OnProgress != null)
+                OnProgress(e.BytesReceived, e.TotalBytesToReceive, e.ProgressPercentage);
+        }
+
+        private void Completed(object sender, UploadDataCompletedEventArgs e)
+        {
+            if (e.Error == null)
+            {
+                OnComplete(e.Result.ToString());
+            }
+            else
+            {
+                if (OnFail != null)
+                    OnFail(e.Error.ToString());
             }
         }
 

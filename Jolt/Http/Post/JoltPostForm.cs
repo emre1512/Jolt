@@ -42,13 +42,19 @@ namespace JoltHttp.Http.Post
             return this;
         }
 
-        public JoltPostForm SetTimeOut(int TimeOut)
-        {
-            timeOut = TimeOut;
-            return this;
-        }
+        //public JoltPostForm SetTimeOut(int TimeOut)
+        //{
+        //    timeOut = TimeOut;
+        //    return this;
+        //}
 
-        public async void MakeRequest(Action<string> OnSuccess, Action<string> OnFail = null,
+        /// <summary>
+        /// Posting x-www-urlencoded form data
+        /// </summary>
+        /// <param name="OnComplete">Called when post request is completed</param>
+        /// <param name="OnFail">Called when post request fails</param>
+        /// <param name="OnStart">Called when post request starts</param>
+        public async void MakeRequest(Action<string> OnComplete, Action<string> OnFail = null,
                                       Action OnStart = null)
         {
 
@@ -86,7 +92,7 @@ namespace JoltHttp.Http.Post
                     if (response.IsSuccessStatusCode)
                     {
                         var result = await response.Content.ReadAsStringAsync();
-                        OnSuccess(result.ToString());
+                        OnComplete(result.ToString());
                     }
                     else
                     {
@@ -99,10 +105,6 @@ namespace JoltHttp.Http.Post
                     if (OnFail != null)
                         OnFail(e.ToString());
                 }
-
-                // Call OnFinish() at the beginning
-                //if (OnFinish != null)
-                //    OnFinish();
 
             }
 

@@ -35,13 +35,13 @@ namespace JoltHttp.Http.Get
             return this;
         }
 
-        public JoltGetText SetTimeOut(int TimeOut)
-        {
-            timeOut = TimeOut;
-            return this;
-        }
+        //public JoltGetText SetTimeOut(int TimeOut)
+        //{
+        //    timeOut = TimeOut;
+        //    return this;
+        //}
 
-        public async void MakeRequest(Action<string> OnSuccess, Action<string> OnFail = null,
+        public async void MakeRequest(Action<string> OnComplete, Action<string> OnFail = null,
                                       Action OnStart = null)
         {
 
@@ -74,7 +74,7 @@ namespace JoltHttp.Http.Get
                 try
                 {
                     var result = await client.GetStringAsync(url);
-                    OnSuccess(result);
+                    OnComplete(result);
                 }
                 catch (Exception e)
                 {

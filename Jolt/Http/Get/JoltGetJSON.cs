@@ -32,13 +32,13 @@ namespace JoltHttp.Http.Get
             return this;
         }
 
-        public JoltGetJSON SetTimeOut(int TimeOut)
-        {
-            timeOut = TimeOut;
-            return this;
-        }
+        //public JoltGetJSON SetTimeOut(int TimeOut)
+        //{
+        //    timeOut = TimeOut;
+        //    return this;
+        //}
 
-        public async void MakeRequest(Action<object> OnSuccess, Action<string> OnFail = null,
+        public async void MakeRequest(Action<object> OnComplete, Action<string> OnFail = null,
                                       Action OnStart = null)
         {
 
@@ -72,7 +72,7 @@ namespace JoltHttp.Http.Get
                 {               
                     var result = await client.GetStringAsync(url);
                     var jsonObject = JSONConverter.JSONToObject(result);
-                    OnSuccess(result);                                          
+                    OnComplete(result);                                          
                 }
                 catch (Exception e)
                 {

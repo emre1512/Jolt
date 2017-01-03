@@ -36,13 +36,13 @@ namespace JoltHttp.Http.Head
             return this;
         }
 
-        public JoltHeadRequest SetTimeOut(int TimeOut)
-        {
-            timeOut = TimeOut;
-            return this;
-        }
+        //public JoltHeadRequest SetTimeOut(int TimeOut)
+        //{
+        //    timeOut = TimeOut;
+        //    return this;
+        //}
 
-        public async void MakeRequest(Action<string> OnSuccess, Action<string> OnFail = null,
+        public async void MakeRequest(Action<string> OnComplete, Action<string> OnFail = null,
                                 Action OnStart = null)
         {
 
@@ -80,7 +80,7 @@ namespace JoltHttp.Http.Head
                     if (response.IsSuccessStatusCode)
                     {
                         var result = await response.Content.ReadAsStringAsync();
-                        OnSuccess(result.ToString());
+                        OnComplete(result.ToString());
                     }
                     else
                     {
