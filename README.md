@@ -70,7 +70,10 @@ Jolt.POST("Url").AsJSON().MakeRequest(
 ### Post form
 
 ```cs
-Jolt.POST("Url").AsForm().MakeRequest(
+Jolt.POST("Url").AsForm()
+    .AddField("username", "123456")
+    .AddField("foo", "boo")
+    .MakeRequest(
     OnComplete: (Result) =>
     {
         // do something...
@@ -81,7 +84,10 @@ Jolt.POST("Url").AsForm().MakeRequest(
 ### Post multipart data
 
 ```cs
-Jolt.POST("Url").AsMultipart().MakeRequest(
+Jolt.POST("Url").AsMultipart().
+    .AddField("foo", "boo")
+    .AddFile(@"C:\image.jpg")
+    .MakeRequest(
     OnComplete: (Result) =>
     {
         // do something...

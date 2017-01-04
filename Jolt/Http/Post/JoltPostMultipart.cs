@@ -61,7 +61,7 @@ namespace JoltHttp.Http.Post
 
         // Here, we are reading a file from its path all at once.
         // Reading a large file all at once can cause memory problems.
-        public JoltPostMultipart AddFile(string filePath, string name, string fileName)
+        public JoltPostMultipart AddFile(string filePath)
         {
             fileToSend = File.ReadAllBytes(filePath);
             return this;
@@ -69,7 +69,7 @@ namespace JoltHttp.Http.Post
 
         // If you have to upload a large file, then you should read it in your own way.
         // Then send it as a byte array.
-        public JoltPostMultipart AddFile(byte[] file, string name, string fileName)
+        public JoltPostMultipart AddFile(byte[] file)
         {
             fileToSend = file;
             return this;
