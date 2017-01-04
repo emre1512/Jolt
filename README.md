@@ -59,7 +59,7 @@ Jolt.GET("Url").AsFile().MakeRequest(
 ### Post JSON
 
 ```cs
-Jolt.POST("Url").AsJSON().MakeRequest(
+Jolt.POST("Url").AsJSON(YourJsonObject).MakeRequest(
     OnComplete: (Result) =>
     {
         // do something...
@@ -109,7 +109,9 @@ Jolt.PUT("Url").AddFile(@"C:\image.jpg").MakeRequest(
 ### Upload file to ftp
 
 ```cs
-Jolt.Upload(@"C:\image.jpg", "Url").SetCredentials("username", "password").MakeRequest(
+Jolt.Upload(@"C:\image.jpg", "Url")
+    .SetCredentials("username", "password")
+    .MakeRequest(
     OnComplete: () =>
     {
         // do something...
@@ -120,7 +122,9 @@ Jolt.Upload(@"C:\image.jpg", "Url").SetCredentials("username", "password").MakeR
 ### Download file from ftp
 
 ```cs
-Jolt.Download(@"C:\image.jpg", "Url").SetCredentials("username", "password").MakeRequest(
+Jolt.Download(@"C:\image.jpg", "Url")
+    .SetCredentials("username", "password")
+    .MakeRequest(
     OnComplete: () =>
     {
         // do something...
