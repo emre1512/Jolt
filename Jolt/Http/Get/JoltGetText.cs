@@ -15,7 +15,6 @@ namespace JoltHttp.Http.Get
         private CookieContainer cookieContainer = new CookieContainer();
         private string oAuthKey;
         private string oAuthValue;
-        private int timeOut;
 
         public JoltGetText(string url)
         {
@@ -55,11 +54,6 @@ namespace JoltHttp.Http.Get
 
             using (var client = new HttpClient(handler))
             {
-
-                if (timeOut != 0)
-                {
-                    client.Timeout = new TimeSpan(0, 0, 0, timeOut);
-                }
 
                 if (oAuthKey != null && oAuthValue != null)
                 {

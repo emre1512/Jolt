@@ -48,8 +48,8 @@ Jolt.GET("Url").AsJSON().MakeRequest(
 ### Get file
 
 ```cs
-Jolt.GET("Url").AsFile().MakeRequest(
-    OnComplete: (Result) =>
+Jolt.GET("Url").AsFile().SaveTo(@"C:\image.jpg").MakeRequest(
+    OnComplete: () =>
     {
         // do something...
     }
@@ -71,7 +71,7 @@ Jolt.POST("Url").AsJSON(YourJsonObject).MakeRequest(
 
 ```cs
 Jolt.POST("Url").AsForm()
-    .AddField("username", "123456")
+    .AddField("username", "Bob")
     .AddField("foo", "boo")
     .MakeRequest(
     OnComplete: (Result) =>
