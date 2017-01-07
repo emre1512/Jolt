@@ -2,27 +2,20 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace JoltHttp.Http.Post
 {
+    /// Use this for posting multipart/form data.
     public class JoltPostMultipart
     {
 
         private string url;
-        //private MultipartFormDataContent MultipartContent = new MultipartFormDataContent();
         private NameValueCollection FormFields = new NameValueCollection();
         private byte[] fileToSend;
-        //private CookieContainer cookieContainer = new CookieContainer();
         private List<KeyValuePair<string, string>> Cookies = new List<KeyValuePair<string, string>>();
         private string oAuthKey;
         private string oAuthValue;
-        private int timeOut;
 
         private Action<string> OnComplete;
         private Action<string> OnFail;
@@ -33,19 +26,33 @@ namespace JoltHttp.Http.Post
             this.url = url;
         }
 
-        public JoltPostMultipart AddField(string value, string name)
+        /// <summary>
+        /// Adds a form field.
+        /// </summary>
+        /// <param name="key">Name of the field.</param>
+        /// <param name="value">Value of the field.</param>
+        public JoltPostMultipart AddField(string key, string value)
         {
-            FormFields.Add(value, name);
-            //MultipartContent.Add(new StringContent(content), name);
+            FormFields.Add(key, value);
             return this;
         }
 
+        /// <summary>
+        /// Adds a custom cookie to request header.
+        /// </summary>
+        /// <param name="CookieName">Name of the cookie.</param>
+        /// <param name="CookieValue">Value of the cookie.</param>
         public JoltPostMultipart SetCookies(string CookieName, string CookieValue)
         {
             Cookies.Add(new KeyValuePair<string, string>(CookieName, CookieValue));
             return this;
         }
 
+        /// <summary>
+        /// Adds authentication info to request header.
+        /// </summary>
+        /// <param name="key">OAuth name.</param>
+        /// <param name="value">OAuth value.</param>
         public JoltPostMultipart SetCredentials(string key, string value)
         {
             oAuthKey = key;
@@ -53,28 +60,35 @@ namespace JoltHttp.Http.Post
             return this;
         }
 
-        //public JoltPostMultipart SetTimeOut(int TimeOut)
-        //{
-        //    timeOut = TimeOut;
-        //    return this;
-        //}
-
-        // Here, we are reading a file from its path all at once.
-        // Reading a large file all at once can cause memory problems.
+        /// <summary>
+        /// Adds a file from file path. This method reads file all at once.
+        /// This can cause memory problems for large files. If file is too large,
+        /// you can read it in your own way and pass it as byte array.
+        /// </summary>
+        /// <param name="filePath">Path of the file.</param>
         public JoltPostMultipart AddFile(string filePath)
         {
             fileToSend = File.ReadAllBytes(filePath);
             return this;
         }
 
-        // If you have to upload a large file, then you should read it in your own way.
-        // Then send it as a byte array.
+        /// <summary>
+        /// Adds a file as byte array.
+        /// </summary>
+        /// <param name="file">File to send as byte array.</param>
         public JoltPostMultipart AddFile(byte[] file)
         {
             fileToSend = file;
             return this;
         }
 
+        /// <summary>
+        /// Posts multipart/form data.
+        /// </summary>
+        /// <param name="OnComplete">Called when request is completed.</param>
+        /// <param name="OnFail">Called when request fails.</param>
+        /// <param name="OnStart">Called when request starts.</param>
+        /// <param name="OnProgress">Returns progress report of upload process.</param>
         public void MakeRequest(Action<string> OnComplete, Action<string> OnFail = null,
                                       Action OnStart = null,
                                       Action<long, long, long> OnProgress = null)

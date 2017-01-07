@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace JoltHttp.Http.Get
 {
+    /// Use this for getting string/text from url.
     public class JoltGetText
     {
         private string url;
@@ -21,12 +18,22 @@ namespace JoltHttp.Http.Get
             this.url = url;
         }
 
+        /// <summary>
+        /// Adds a custom cookie to request header.
+        /// </summary>
+        /// <param name="CookieName">Name of the cookie.</param>
+        /// <param name="CookieValue">Value of the cookie.</param>
         public JoltGetText SetCookies(string CookieName, string CookieValue)
         {
             cookieContainer.Add(new Cookie(CookieName, CookieValue));
             return this;
         }
 
+        /// <summary>
+        /// Adds authentication info to request header.
+        /// </summary>
+        /// <param name="key">OAuth name.</param>
+        /// <param name="value">OAuth value.</param>
         public JoltGetText SetCredentials(string key, string value)
         {
             oAuthKey = key;
@@ -34,12 +41,12 @@ namespace JoltHttp.Http.Get
             return this;
         }
 
-        //public JoltGetText SetTimeOut(int TimeOut)
-        //{
-        //    timeOut = TimeOut;
-        //    return this;
-        //}
-
+        /// <summary>
+        /// Gets string/text from the url.
+        /// </summary>
+        /// <param name="OnComplete">Called when request is completed.</param>
+        /// <param name="OnFail">Called when request fails.</param>
+        /// <param name="OnStart">Called when request starts.</param>
         public async void MakeRequest(Action<string> OnComplete, Action<string> OnFail = null,
                                       Action OnStart = null)
         {

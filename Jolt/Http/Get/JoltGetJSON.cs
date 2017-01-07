@@ -6,25 +6,35 @@ using System.Net.Http.Headers;
 
 namespace JoltHttp.Http.Get
 {
+    /// Use this for getting JSON from url.
     public class JoltGetJSON
     {
         private string url;
         private CookieContainer cookieContainer = new CookieContainer();
         private string oAuthKey;
         private string oAuthValue;
-        private int timeOut;
 
         public JoltGetJSON(string url)
         {
             this.url = url;
         }
 
+        /// <summary>
+        /// Adds a custom cookie to request header.
+        /// </summary>
+        /// <param name="CookieName">Name of the cookie.</param>
+        /// <param name="CookieValue">Value of the cookie.</param>
         public JoltGetJSON SetCookies(string CookieName, string CookieValue)
         {
             cookieContainer.Add(new Cookie(CookieName, CookieValue));
             return this;
         }
 
+        /// <summary>
+        /// Adds authentication info to request header.
+        /// </summary>
+        /// <param name="key">OAuth name.</param>
+        /// <param name="value">OAuth value.</param>
         public JoltGetJSON SetCredentials(string key, string value)
         {
             oAuthKey = key;
@@ -32,12 +42,12 @@ namespace JoltHttp.Http.Get
             return this;
         }
 
-        //public JoltGetJSON SetTimeOut(int TimeOut)
-        //{
-        //    timeOut = TimeOut;
-        //    return this;
-        //}
-
+        /// <summary>
+        /// Gets JSON from the url.
+        /// </summary>
+        /// <param name="OnComplete">Called when request is completed.</param>
+        /// <param name="OnFail">Called when request fails.</param>
+        /// <param name="OnStart">Called when request starts.</param>
         public async void MakeRequest(Action<object> OnComplete, Action<string> OnFail = null,
                                       Action OnStart = null)
         {
@@ -52,11 +62,6 @@ namespace JoltHttp.Http.Get
 
             using (var client = new HttpClient(handler))
             {
-
-                if (timeOut != 0)
-                {
-                    client.Timeout = new TimeSpan(0, 0, 0, timeOut);
-                }
 
                 if (oAuthKey != null && oAuthValue != null)
                 {
@@ -79,10 +84,6 @@ namespace JoltHttp.Http.Get
                     if (OnFail != null)
                         OnFail(e.ToString());
                 }
-
-                // Call OnFinish() at the end
-                //if (OnFinish != null)
-                //    OnFinish();
 
             }
 

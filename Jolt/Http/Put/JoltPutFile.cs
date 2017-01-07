@@ -1,26 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+
 
 namespace JoltHttp.Http.Put
 {
+    /// Use this to upload file via PUT request.
     public class JoltPutFile
     {
         private string url;
         private string filePath;
         byte[] file;
-        //private CookieContainer cookieContainer = new CookieContainer();
         private List<KeyValuePair<string, string>> Cookies = new List<KeyValuePair<string, string>>();
         private string oAuthKey;
         private string oAuthValue;
-        private int timeOut;
 
         private Action OnComplete;
         private Action<string> OnFail;
@@ -38,18 +32,22 @@ namespace JoltHttp.Http.Put
             this.url = url;
         }
 
+        /// <summary>
+        /// Adds a custom cookie to request header.
+        /// </summary>
+        /// <param name="CookieName">Name of the cookie.</param>
+        /// <param name="CookieValue">Value of the cookie.</param>
         public JoltPutFile SetCookies(string CookieName, string CookieValue)
         {
             Cookies.Add(new KeyValuePair<string, string>(CookieName, CookieValue));
             return this;
         }
 
-        //public JoltPutFile SetCookies(string CookieName, string CookieValue)
-        //{
-        //    cookieContainer.Add(new Cookie(CookieName, CookieValue));
-        //    return this;
-        //}
-
+        /// <summary>
+        /// Adds authentication info to request header.
+        /// </summary>
+        /// <param name="key">OAuth name.</param>
+        /// <param name="value">OAuth value.</param>
         public JoltPutFile SetCredentials(string key, string value)
         {
             oAuthKey = key;
@@ -57,12 +55,14 @@ namespace JoltHttp.Http.Put
             return this;
         }
 
-        //public JoltPutFile SetTimeOut(int TimeOut)
-        //{
-        //    timeOut = TimeOut;
-        //    return this;
-        //}
 
+        /// <summary>
+        /// Posts multipart/form data.
+        /// </summary>
+        /// <param name="OnComplete">Called when request is completed.</param>
+        /// <param name="OnFail">Called when request fails.</param>
+        /// <param name="OnStart">Called when request starts.</param>
+        /// <param name="OnProgress">Returns progress report of upload process.</param>
         public void MakeRequest(Action OnComplete, Action<string> OnFail = null,
                                 Action OnStart = null,
                                 Action<long, long, long> OnProgress = null)

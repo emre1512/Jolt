@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace JoltHttp.Http.Put
 {
@@ -15,11 +11,21 @@ namespace JoltHttp.Http.Put
             this.url = url;
         }
 
+        /// <summary>
+        /// Adds a file from file path. This method reads file all at once.
+        /// This can cause memory problems for large files. If file is too large,
+        /// you can read it in your own way and pass it as byte array.
+        /// </summary>
+        /// <param name="filePath">Path of the file.</param>
         public JoltPutFile AddFile(string filePath)
         {
             return new JoltPutFile(filePath, url);
         }
 
+        /// <summary>
+        /// Adds a file as byte array.
+        /// </summary>
+        /// <param name="file">File to send as byte array.</param>
         public JoltPutFile AddFile(byte[] file)
         {
             return new JoltPutFile(file, url);

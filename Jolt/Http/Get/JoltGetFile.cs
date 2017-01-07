@@ -1,19 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
 using System.Net;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Threading;
 
 namespace JoltHttp.Http.Get
 {
+    /// Use this for getting file from url.
     public class JoltGetFile
     {
         private string url;
         private string filepath;
-        //private CookieContainer cookieContainer = new CookieContainer();
         private List<KeyValuePair<string, string>> Cookies = new List<KeyValuePair<string, string>>();
         private string oAuthKey;
         private string oAuthValue;
@@ -28,18 +24,22 @@ namespace JoltHttp.Http.Get
             this.url = url;
         }
 
+        /// <summary>
+        /// Adds a custom cookie to request header.
+        /// </summary>
+        /// <param name="CookieName">Name of the cookie.</param>
+        /// <param name="CookieValue">Value of the cookie.</param>
         public JoltGetFile SetCookies(string CookieName, string CookieValue)
         {
             Cookies.Add(new KeyValuePair<string, string>(CookieName, CookieValue));
             return this;
         }
 
-        //public JoltGetFile SetCookies(string CookieName, string CookieValue)
-        //{
-        //    cookieContainer.Add(new Cookie(CookieName, CookieValue));
-        //    return this;
-        //}
-
+        /// <summary>
+        /// Adds authentication info to request header.
+        /// </summary>
+        /// <param name="key">OAuth name.</param>
+        /// <param name="value">OAuth value.</param>
         public JoltGetFile SetCredentials(string key, string value)
         {
             oAuthKey = key;
@@ -47,18 +47,23 @@ namespace JoltHttp.Http.Get
             return this;
         }
 
-        //public JoltGetFile SetTimeOut(int TimeOut)
-        //{
-        //    timeOut = TimeOut;
-        //    return this;
-        //}
-
+        /// <summary>
+        /// Saves file to the given path.
+        /// </summary>
+        /// <param name="filepath">File path for the file.</param>
         public JoltGetFile SaveTo(string filepath)
         {
             this.filepath = filepath;
             return this;
         }
 
+        /// <summary>
+        /// Gets file from the url.
+        /// </summary>
+        /// <param name="OnComplete">Called when request is completed.</param>
+        /// <param name="OnFail">Called when request fails.</param>
+        /// <param name="OnStart">Called when request starts.</param>
+        /// <param name="OnProgress">Returns progress report of download process.</param>
         public void MakeRequest(Action OnComplete, Action<string> OnFail = null,
                                 Action OnStart = null,
                                 Action<long, long, long> OnProgress = null)

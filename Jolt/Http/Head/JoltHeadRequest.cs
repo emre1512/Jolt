@@ -1,34 +1,39 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace JoltHttp.Http.Head
 {
-
+    /// Use this for HEAD requests.
     public class JoltHeadRequest
     {
         private string url;
         private CookieContainer cookieContainer = new CookieContainer();
         private string oAuthKey;
         private string oAuthValue;
-        private int timeOut;
 
         public JoltHeadRequest(string url)
         {
             this.url = url;
         }
 
+        /// <summary>
+        /// Adds a custom cookie to request header.
+        /// </summary>
+        /// <param name="CookieName">Name of the cookie.</param>
+        /// <param name="CookieValue">Value of the cookie.</param>
         public JoltHeadRequest SetCookies(string CookieName, string CookieValue)
         {
             cookieContainer.Add(new Cookie(CookieName, CookieValue));
             return this;
         }
 
+        /// <summary>
+        /// Adds authentication info to request header.
+        /// </summary>
+        /// <param name="key">OAuth name.</param>
+        /// <param name="value">OAuth value.</param>
         public JoltHeadRequest SetCredentials(string key, string value)
         {
             oAuthKey = key;
@@ -36,12 +41,12 @@ namespace JoltHttp.Http.Head
             return this;
         }
 
-        //public JoltHeadRequest SetTimeOut(int TimeOut)
-        //{
-        //    timeOut = TimeOut;
-        //    return this;
-        //}
-
+        /// <summary>
+        /// Makes the HEAD request.
+        /// </summary>
+        /// <param name="OnComplete">Called when request is completed.</param>
+        /// <param name="OnFail">Called when request fails.</param>
+        /// <param name="OnStart">Called when request starts.</param>
         public async void MakeRequest(Action<string> OnComplete, Action<string> OnFail = null,
                                 Action OnStart = null)
         {
@@ -56,11 +61,6 @@ namespace JoltHttp.Http.Head
 
             using (var client = new HttpClient(handler))
             {
-
-                if (timeOut != 0)
-                {
-                    client.Timeout = new TimeSpan(0, 0, 0, timeOut);
-                }
 
                 if (oAuthKey != null && oAuthValue != null)
                 {

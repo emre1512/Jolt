@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace JoltHttp.Http.Post
 {
+
+    /// Use this for posting x-www-form-urlencoded data.
     public class JoltPostForm
     {
         private string url;
@@ -16,25 +15,39 @@ namespace JoltHttp.Http.Post
         private Dictionary<string, string> FormFields = new Dictionary<string, string>();
         private string oAuthKey;
         private string oAuthValue;
-        private int timeOut;
 
         public JoltPostForm(string url)
         {
             this.url = url;
         }
 
+        /// <summary>
+        /// Adds a form field.
+        /// </summary>
+        /// <param name="key">Name of the field.</param>
+        /// <param name="value">Value of the field.</param>
         public JoltPostForm AddField(string key, string value)
         {
             FormFields.Add(key, value);
             return this;
         }
 
+        /// <summary>
+        /// Adds a custom cookie to request header.
+        /// </summary>
+        /// <param name="CookieName">Name of the cookie.</param>
+        /// <param name="CookieValue">Value of the cookie.</param>
         public JoltPostForm SetCookies(string CookieName, string CookieValue)
         {
             cookieContainer.Add(new Cookie(CookieName, CookieValue));
             return this;
         }
 
+        /// <summary>
+        /// Adds authentication info to request header.
+        /// </summary>
+        /// <param name="key">OAuth name.</param>
+        /// <param name="value">OAuth value.</param>
         public JoltPostForm SetCredentials(string key, string value)
         {
             oAuthKey = key;
@@ -42,18 +55,12 @@ namespace JoltHttp.Http.Post
             return this;
         }
 
-        //public JoltPostForm SetTimeOut(int TimeOut)
-        //{
-        //    timeOut = TimeOut;
-        //    return this;
-        //}
-
         /// <summary>
-        /// Posting x-www-urlencoded form data
+        /// Posts x-www-form-urlencoded data.
         /// </summary>
-        /// <param name="OnComplete">Called when post request is completed</param>
-        /// <param name="OnFail">Called when post request fails</param>
-        /// <param name="OnStart">Called when post request starts</param>
+        /// <param name="OnComplete">Called when request is completed.</param>
+        /// <param name="OnFail">Called when request fails.</param>
+        /// <param name="OnStart">Called when request starts.</param>
         public async void MakeRequest(Action<string> OnComplete, Action<string> OnFail = null,
                                       Action OnStart = null)
         {
@@ -68,11 +75,6 @@ namespace JoltHttp.Http.Post
 
             using (var client = new HttpClient(handler))
             {
-
-                if (timeOut != 0)
-                {
-                    client.Timeout = new TimeSpan(0, 0, 0, timeOut);
-                }
 
                 if (oAuthKey != null && oAuthValue != null)
                 {
