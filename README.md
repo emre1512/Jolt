@@ -2,7 +2,7 @@
 
 ![https://msdn.microsoft.com/en-us/library/w0x726c2(v=vs.110).aspx](https://img.shields.io/badge/platform-C%23%2F.NET-brightgreen.svg?style=flat-square)
 ![https://www.apache.org/licenses/LICENSE-2.0](https://img.shields.io/badge/licence-Apache%20v2.0-blue.svg?style=flat-square)
-![https://github.com/emre1512/Jolt](https://img.shields.io/badge/version-0.3.4-ff69b4.svg?style=flat-square)
+![https://github.com/emre1512/Jolt](https://img.shields.io/badge/version-0.3.5-ff69b4.svg?style=flat-square)
 
 ## What Jolt can do?
 
@@ -109,7 +109,8 @@ Jolt.PUT("Url").AddFile(@"C:\image.jpg").MakeRequest(
 ### Upload file to ftp
 
 ```cs
-Jolt.Upload(@"C:\image.jpg", "Url")
+Jolt.Upload("Url")
+    .AddFile(@"C:\image.jpg")
     .SetCredentials("username", "password")
     .MakeRequest(
     OnComplete: () =>
@@ -122,7 +123,8 @@ Jolt.Upload(@"C:\image.jpg", "Url")
 ### Download file from ftp
 
 ```cs
-Jolt.Download(@"C:\image.jpg", "Url")
+Jolt.Download("Url")
+    .SaveTo(@"C:\image.jpg")
     .SetCredentials("username", "password")
     .MakeRequest(
     OnComplete: () =>
@@ -134,7 +136,7 @@ Jolt.Download(@"C:\image.jpg", "Url")
 
 - Detailed documentation of other features will be added soon
 
-## Documentation
+## Detailed Documentation
 
 - Will be added soon
 

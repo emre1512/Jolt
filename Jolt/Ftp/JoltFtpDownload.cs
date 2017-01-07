@@ -22,10 +22,15 @@ namespace JoltHttp.Ftp
         public Action<string> OnFail;
         private Action<long, long, long> OnProgress;
 
-        public JoltFtpDownload(string filepath, string url)
+        public JoltFtpDownload(string url)
+        {
+            this.url = url;
+        }
+
+        public JoltFtpDownload SaveTo(string filepath)
         {
             this.filepath = filepath;
-            this.url = url;
+            return this;
         }
 
         public JoltFtpDownload SetCredentials(string username, string password)

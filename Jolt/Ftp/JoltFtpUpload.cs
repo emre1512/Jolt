@@ -21,16 +21,21 @@ namespace JoltHttp.Ftp
         private Action<string> OnFail;
         private Action<long, long, long> OnProgress;
 
-        public JoltFtpUpload(string filePath, string url)
+        public JoltFtpUpload(string url)
         {
-            this.filePath = filePath;
             this.url = url;
         }
 
-        public JoltFtpUpload(byte[] file, string url)
+        public JoltFtpUpload AddFile(byte[] file)
         {
             this.file = file;
-            this.url = url;
+            return this;
+        }
+
+        public JoltFtpUpload AddFile(string filePath)
+        {
+            this.filePath = filePath;
+            return this;
         }
 
         public JoltFtpUpload SetCredentials(string username, string password)

@@ -36,19 +36,14 @@ namespace JoltHttp
             return new JoltHeadRequest(url);
         }
 
-        public static JoltFtpUpload Upload(string filePath, string url)
+        public static JoltFtpUpload Upload(string url)
         {
-            return new JoltFtpUpload(filePath, url);
+            return new JoltFtpUpload(url);
         }
 
-        public static JoltFtpUpload Upload(byte[] file, string url)
+        public static JoltFtpDownload Download(string url)
         {
-            return new JoltFtpUpload(file, url);
-        }
-
-        public static JoltFtpDownload Download(string filePath, string url)
-        {
-            return new JoltFtpDownload(filePath, url);
+            return new JoltFtpDownload(url);
         }
 
     }   
