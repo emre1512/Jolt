@@ -13,7 +13,6 @@ namespace JoltHttp.Http.Get
         private List<KeyValuePair<string, string>> Cookies = new List<KeyValuePair<string, string>>();
         private string oAuthKey;
         private string oAuthValue;
-        private int timeOut;
 
         private Action OnComplete;
         public Action<string> OnFail;

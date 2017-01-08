@@ -4,6 +4,7 @@ using System.Net;
 
 namespace JoltHttp.Ftp
 {
+    /// Use this for downloading file from ftp.
     public class JoltFtpDownload
     {
 
@@ -11,7 +12,6 @@ namespace JoltHttp.Ftp
         private string filepath;
         private string username;
         private string password;
-        private int timeOut;
 
         private Action OnComplete;
         public Action<string> OnFail;
@@ -22,12 +22,21 @@ namespace JoltHttp.Ftp
             this.url = url;
         }
 
+        /// <summary>
+        /// Saves file to the given path.
+        /// </summary>
+        /// <param name="filepath">File path for the file.</param>
         public JoltFtpDownload SaveTo(string filepath)
         {
             this.filepath = filepath;
             return this;
         }
 
+        /// <summary>
+        /// Adds authentication info to request header.
+        /// </summary>
+        /// <param name="username">Username for ftp.</param>
+        /// <param name="password">Password for ftp.</param>
         public JoltFtpDownload SetCredentials(string username, string password)
         {
             this.username = username;
@@ -35,6 +44,13 @@ namespace JoltHttp.Ftp
             return this;
         }
 
+        /// <summary>
+        /// Gets file from the url.
+        /// </summary>
+        /// <param name="OnComplete">Called when request is completed.</param>
+        /// <param name="OnFail">Called when request fails.</param>
+        /// <param name="OnStart">Called when request starts.</param>
+        /// <param name="OnProgress">Returns progress report of download process.</param>
         public void MakeRequest(Action OnComplete, Action<string> OnFail = null,
                                 Action OnStart = null,
                                 Action<long, long, long> OnProgress = null)

@@ -4,6 +4,7 @@ using System.Net;
 
 namespace JoltHttp.Ftp
 {
+    /// Use this for uploading file to ftp.
     public class JoltFtpUpload
     {
 
@@ -22,18 +23,34 @@ namespace JoltHttp.Ftp
             this.url = url;
         }
 
+        /// <summary>
+        /// Adds a file as byte array.
+        /// </summary>
+        /// <param name="file">File to send as byte array.</param>
         public JoltFtpUpload AddFile(byte[] file)
         {
             this.file = file;
             return this;
         }
 
+        /// <summary>
+        /// Adds a file from file path. This method reads file all at once.
+        /// This can cause memory problems for large files. If file is too large,
+        /// you can read it in your own way and pass it as byte array.
+        /// </summary>
+        /// <param name="filePath">Path of the file.</param>
         public JoltFtpUpload AddFile(string filePath)
         {
             this.filePath = filePath;
             return this;
         }
 
+
+        /// <summary>
+        /// Adds authentication info to request header.
+        /// </summary>
+        /// <param name="username">Username for ftp.</param>
+        /// <param name="password">Password for ftp.</param>
         public JoltFtpUpload SetCredentials(string username, string password)
         {
             this.username = username;
@@ -41,6 +58,13 @@ namespace JoltHttp.Ftp
             return this;
         }
 
+        /// <summary>
+        /// Posts multipart/form data.
+        /// </summary>
+        /// <param name="OnComplete">Called when request is completed.</param>
+        /// <param name="OnFail">Called when request fails.</param>
+        /// <param name="OnStart">Called when request starts.</param>
+        /// <param name="OnProgress">Returns progress report of upload process.</param>
         public void MakeRequest(Action OnComplete, Action<string> OnFail = null,
                                 Action OnStart = null,
                                 Action<long, long, long> OnProgress = null)
