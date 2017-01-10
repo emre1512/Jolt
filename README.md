@@ -30,7 +30,8 @@
 
 ## Installation
 
-- Will be added soon
+- Download the latest release of [Jolt.dll](https://github.com/emre1512/Jolt/releases/latestJolt.dll) and add it as refference to your project.
+- Remember to add ```cs using JoltHttp``` namespace when using.
 
 ## Usage
 
