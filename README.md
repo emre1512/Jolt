@@ -9,11 +9,11 @@
 - Asynchronous GET,POST,PUT,DELETE,HEAD requests
 
 	* Asynchronously Download (via GET)
-		* Text/string
+		* Text
                 * JSON
 		* Files
 	* Asynchronously Upload (via POST/PUT)
-		* Text/string
+		* Text
                 * JSON
 		* application/x-www-form-urlencoded
 		* multipart/form-data
