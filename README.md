@@ -9,10 +9,12 @@
 - Asynchronous GET,POST,PUT,DELETE,HEAD requests
 
 	* Asynchronously Download (via GET)
-		* Text/JSON
+		* Text/string
+                * JSON
 		* Files
 	* Asynchronously Upload (via POST/PUT)
-		* Text/JSON
+		* Text/string
+                * JSON
 		* application/x-www-form-urlencoded
 		* multipart/form-data
 		* Files
@@ -139,7 +141,7 @@ Jolt.Download("Url")
 
 ## Detailed Documentation
 
-- Will be added soon
+- Detailed documentation can be found at [Wiki](https://github.com/emre1512/Jolt/wiki)
 
 ## LICENSE
 
