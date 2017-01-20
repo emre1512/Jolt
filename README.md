@@ -137,8 +137,6 @@ Jolt.Download("Url")
 );
 ```
 
-- Detailed documentation of other features will be added soon
-
 ## Detailed Documentation
 
 - Detailed documentation can be found at [Wiki](https://github.com/emre1512/Jolt/wiki)
