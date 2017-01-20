@@ -87,7 +87,7 @@ Jolt.POST("Url").AsForm()
 ### Post multipart data
 
 ```cs
-Jolt.POST("Url").AsMultipart().
+Jolt.POST("Url").AsMultipart()
     .AddField("foo", "boo")
     .AddFile(@"C:\image.jpg")
     .MakeRequest(
